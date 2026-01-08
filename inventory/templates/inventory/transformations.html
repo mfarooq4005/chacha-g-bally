@@ -1,0 +1,34 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Transformations | School IMS{% endblock %}
+{% block header %}Transformation Module{% endblock %}
+
+{% block content %}
+<div class="grid gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h2 class="text-lg font-semibold">Create Finished Goods</h2>
+        <p class="text-sm text-slate-400 mt-2">Consume raw materials and log finished outputs with photo uploads to S3.</p>
+        <form method="post" enctype="multipart/form-data" class="mt-6 grid gap-4">
+            {% csrf_token %}
+            {{ form.raw_material }}
+            <div class="grid gap-4 sm:grid-cols-2">
+                {{ form.finished_good_name }}
+                {{ form.finished_good_quantity }}
+            </div>
+            <div class="grid gap-4 sm:grid-cols-2">
+                {{ form.consumed_quantity }}
+                {{ form.photo }}
+            </div>
+            {{ form.notes }}
+            <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-lg text-sm">Record Transformation</button>
+        </form>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h3 class="text-base font-semibold">S3 Media Pipeline</h3>
+        <p class="text-sm text-slate-400 mt-3">Configure AWS credentials in Django settings and set DEFAULT_FILE_STORAGE to enable direct uploads.</p>
+        <div class="mt-4 rounded-lg bg-slate-950/60 border border-slate-800 p-4 text-xs text-slate-400">
+            STORAGE_BACKEND = "storages.backends.s3boto3.S3Boto3Storage"
+        </div>
+    </div>
+</div>
+{% endblock %}

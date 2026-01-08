@@ -1,0 +1,65 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Dashboard | School IMS{% endblock %}
+{% block header %}Role-based Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2 space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h2 class="text-lg font-semibold">Welcome, {{ request.user.first_name|default:request.user.username }}</h2>
+            <p class="text-sm text-slate-400 mt-2">Role detected: <span class="text-indigo-300">{{ role }}</span>. Modules below adapt based on permissions.</p>
+            <div class="grid gap-4 mt-6 sm:grid-cols-2">
+                {% for module in modules %}
+                    <div class="rounded-xl border border-slate-800 bg-slate-950/50 p-4">
+                        <p class="text-xs uppercase text-slate-400">Module</p>
+                        <p class="text-base font-semibold capitalize">{{ module }}</p>
+                        <p class="text-xs text-slate-500 mt-2">Realtime access with audit trails.</p>
+                    </div>
+                {% empty %}
+                    <div class="text-sm text-slate-400">No modules assigned yet.</div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <div class="flex items-center justify-between">
+                <h3 class="text-base font-semibold">Low Stock Snapshot</h3>
+                <span class="text-xs text-slate-500">Threshold &lt; 10</span>
+            </div>
+            <div class="mt-4 space-y-3">
+                {% for asset in low_stock_assets %}
+                    <div class="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/50 px-4 py-3">
+                        <div>
+                            <p class="text-sm font-medium">{{ asset.name }}</p>
+                            <p class="text-xs text-slate-500">SKU {{ asset.sku }}</p>
+                        </div>
+                        <span class="text-xs text-rose-300">{{ asset.quantity_on_hand }} left</span>
+                    </div>
+                {% empty %}
+                    <p class="text-sm text-slate-400">All good. Inventory levels are healthy.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h3 class="text-base font-semibold">Intelligent Alerts</h3>
+            <div class="mt-4 space-y-3">
+                {% for alert in alerts %}
+                    <div class="rounded-lg border border-slate-800 bg-slate-950/50 px-4 py-3">
+                        <p class="text-xs uppercase text-slate-400">{{ alert.get_alert_type_display }}</p>
+                        <p class="text-sm font-medium">{{ alert.message }}</p>
+                    </div>
+                {% empty %}
+                    <p class="text-sm text-slate-400">No alerts right now.</p>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="bg-gradient-to-br from-indigo-600/20 to-slate-900 border border-slate-800 rounded-2xl p-6">
+            <p class="text-xs uppercase text-indigo-200">Workflow</p>
+            <h3 class="text-base font-semibold">Chain of Custody</h3>
+            <p class="text-sm text-slate-300 mt-2">Storekeeper → Coordinator → Teacher. Items stay with sender until accepted.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

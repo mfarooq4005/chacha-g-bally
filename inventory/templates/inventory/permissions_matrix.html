@@ -1,0 +1,41 @@
+{% extends "inventory/base.html" %}
+
+{% block title %}Permissions Matrix | School IMS{% endblock %}
+{% block header %}Permissions Matrix{% endblock %}
+
+{% block content %}
+<div class="grid gap-6 lg:grid-cols-3">
+    <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h2 class="text-lg font-semibold">Granular Permission Control</h2>
+        <p class="text-sm text-slate-400 mt-2">Toggle per-user permissions such as approval rights, price visibility, or asset deletion.</p>
+        <form method="post" class="mt-6 space-y-6">
+            {% csrf_token %}
+            <div>
+                <label class="text-sm text-slate-300">Select User</label>
+                {{ form.user }}
+            </div>
+            <div>
+                <label class="text-sm text-slate-300">Permissions</label>
+                <div class="mt-2 grid gap-2 sm:grid-cols-2">
+                    {% for checkbox in form.permissions %}
+                        <label class="flex items-center gap-2 bg-slate-950/60 border border-slate-800 rounded-lg px-3 py-2 text-sm">
+                            {{ checkbox.tag }}
+                            {{ checkbox.choice_label }}
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+            <button class="bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-2 rounded-lg text-sm">Save Permissions</button>
+        </form>
+    </div>
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+        <h3 class="text-base font-semibold">Recommended Defaults</h3>
+        <ul class="mt-4 space-y-3 text-sm text-slate-400">
+            <li>Principal: Approve requests, view pricing, access alerts.</li>
+            <li>Coordinator: Approve issues, manage queues, export reports.</li>
+            <li>Storekeeper: Update stock, create transformations.</li>
+            <li>Teacher: Issue to class, accept assets, view assigned stock.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}
